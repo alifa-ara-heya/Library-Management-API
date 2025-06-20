@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import { Book } from '../models/book.model';
 export const booksRoutes = express.Router();
 
+
+// create book
 booksRoutes.post('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const body = req.body
@@ -22,8 +24,8 @@ booksRoutes.get('/', async (req: Request, res: Response, next: NextFunction) => 
 
     try {
         const { filter, sortBy = 'createdAt', sort = 'asc', limit = '10' } = req.query
-        console.log('sort', sort);
-        console.log('sortBy', sortBy);
+        // console.log('sort', sort);
+        // console.log('sortBy', sortBy);
 
         // console.log(filter);
         const query: any = {}
@@ -51,8 +53,65 @@ booksRoutes.get('/', async (req: Request, res: Response, next: NextFunction) => 
     }
 })
 
+// get book by id
+booksRoutes.get('/:bookId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const bookId = req.params.bookId;
+        const book = await Book.findById(bookId);
 
-// global error handler (sobar last e)
+        if (!book) {
+            res.status(400).json({
+                success: false,
+                message: 'Book not found',
+                data: null
+            })
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "Book retrieved successfully",
+            data: book
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+// updating book
+booksRoutes.patch('/:bookId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const bookId = req.params.bookId
+        const updatedBook = req.body;
+        const book = await Book.findByIdAndUpdate(bookId, updatedBook, { new: true, runValidators: true })
+
+        res.status(201).json({
+            success: true,
+            message: 'Book updated successfully',
+            data: book
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+// Deleting Book
+booksRoutes.delete('/:bookId', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const bookId = req.params.bookId
+        const deleteBook = await Book.findByIdAndDelete(bookId)
+
+        res.status(201).json({
+            success: true,
+            message: 'Book deleted successfully',
+            data: null
+        })
+    } catch (error) {
+        next(error)
+    }
+})
+
+
+// global error handler (last e)
 booksRoutes.use((error: any, req: Request, res: Response, next: NextFunction) => {
 
     if (error.name === 'ValidationError') {
