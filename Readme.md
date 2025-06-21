@@ -26,8 +26,8 @@ A simple RESTful API for managing books and borrowing records in a library syste
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/library-api.git
-   cd library-api
+   git clone https://github.com/alifa-ara-heya/Library-Management-API.git
+   cd .\Library-Management-API\
    ```
 
 2. **Install dependencies**
@@ -51,6 +51,18 @@ A simple RESTful API for managing books and borrowing records in a library syste
    ```
 
 ---
+
+### 📂 Folder Structure (Simplified)
+
+```md
+src/
+├── app/
+│   ├── controllers/
+│   ├── models/
+│   ├── interfaces/
+├── server.ts
+├── app.ts
+```
 
 ### 🔗 API Endpoints
 
@@ -100,16 +112,4 @@ Returns the total number of borrowed copies per book, along with the book's titl
 
 You can use **Postman** or **Thunder Client** to test the API. Make sure MongoDB is running locally or use a remote URI in `.env`.
 
----
-
-### 📂 Folder Structure (Simplified)
-
-```md
-src/
-├── app/
-│   ├── controllers/
-│   ├── models/
-│   ├── interfaces/
-├── server.ts
-├── app.ts
-```
+> [Live link] (<https://library-management-api-eta.vercel.app/api/borrow>)
