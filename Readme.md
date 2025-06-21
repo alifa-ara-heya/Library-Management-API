@@ -112,4 +112,4 @@ Returns the total number of borrowed copies per book, along with the book's titl
 
 You can use **Postman** or **Thunder Client** to test the API. Make sure MongoDB is running locally or use a remote URI in `.env`.
 
-> [Live link] (<https://library-management-api-eta.vercel.app/api/borrow>)
+> [Live link](https://library-management-api-eta.vercel.app)
