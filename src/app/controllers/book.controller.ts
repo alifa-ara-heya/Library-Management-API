@@ -23,7 +23,12 @@ booksRoutes.post('/', async (req: Request, res: Response, next: NextFunction) =>
 booksRoutes.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-        const { filter, sortBy = 'createdAt', sort = 'asc', limit = '10' } = req.query
+        const {
+            filter,
+            sortBy = 'createdAt',
+            sort = 'asc',
+            limit = '10',
+            page = '1' } = req.query
         // console.log('sort', sort);
         // console.log('sortBy', sortBy);
 
@@ -38,18 +43,40 @@ booksRoutes.get('/', async (req: Request, res: Response, next: NextFunction) => 
         const sortOrder = sort === 'desc' ? -1 : 1;
 
         // const books = await Book.find({ genre: filter })
-        const books = await Book.find(query)
-            .sort({ [sortBy as string]: sortOrder })
-            .limit((Number(limit)))
+        /*  const books = await Book.find(query)
+             .sort({ [sortBy as string]: sortOrder })
+             .limit((Number(limit)))
+ 
+         res.status(201).json({
+             success: true,
+             message: 'Books retrieved successfully',
+             data: books
+         }) */
 
-        res.status(201).json({
+        // pagination logic
+        const skip = (Number(page) - 1) * Number(limit);
+
+        const [books, total] = await Promise.all([
+            Book.find(query)
+                .sort({ [sortBy as string]: sortOrder })
+                .skip(skip)
+                .limit(Number(limit)),
+            Book.countDocuments(query)
+        ])
+
+        res.status(200).json({
             success: true,
+            data: books,
             message: 'Books retrieved successfully',
-            data: books
-        })
-
+            meta: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                totalPages: Math.ceil(total / Number(limit)),
+            },
+        });
     } catch (error: any) {
-        next(error)
+        next(error);
     }
 })
 
